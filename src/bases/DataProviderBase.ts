@@ -1,5 +1,6 @@
 import { Observable, Observer } from '@dojo/core/Observable';
-import { SortDetails, DataProperties, SliceDetails, ItemProperties, Constructor } from '../interfaces';
+import Promise from '@dojo/shim/Promise';
+import { SortDetails, DataProperties, SliceDetails, ItemProperties } from '../interfaces';
 
 export interface DataProviderOptions {
 }
@@ -48,7 +49,7 @@ abstract class DataProviderBase<T = any, O extends DataProviderOptions = DataPro
 	/**
 	 * Use options and state to update data
 	 */
-	protected buildData(): void {}
+	protected buildData(): void | Promise<void> {}
 
 	configure({ slice, sort = [] }: C, updateData = true) {
 		this.state.slice = slice;
@@ -86,11 +87,12 @@ abstract class DataProviderBase<T = any, O extends DataProviderOptions = DataPro
 	protected processData(): void {}
 
 	protected updateData(): void {
-		this.buildData();
-		this.processData();
-		const data = this.data;
-		this._observers.forEach((observer) => {
-			observer.next(data);
+		(this.buildData() || Promise.resolve()).then(() => {
+			this.processData();
+			const data = this.data;
+			this._observers.forEach((observer) => {
+				observer.next(data);
+			});
 		});
 	}
 }

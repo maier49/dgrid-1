@@ -26,6 +26,7 @@
     "@dojo/i18n": "beta1",
     "@dojo/shim": "beta1",
     "@dojo/widget-core": "beta1",
+    "@dojo/stores": "2.0.0-alpha.12",
     "maquette": "2.4.3"
   },
   "devDependencies": {

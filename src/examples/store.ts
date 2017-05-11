@@ -1,20 +1,20 @@
+import StoreBase from '@dojo/stores/store/StoreBase';
 import { ProjectorMixin } from '@dojo/widget-core/mixins/Projector';
-import Grid from '../Grid';
-import ArrayDataProvider from '../providers/ArrayDataProvider';
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { WidgetProperties } from '@dojo/widget-core/interfaces';
 import { w } from '@dojo/widget-core/d';
-import { GridProperties } from '../Grid';
+import Grid, { GridProperties } from '../Grid';
+import StoreDataProvider from '../providers/StoreDataProvider';
 import { HasScrollTo } from '../interfaces';
 import makeData from './makeData';
 
 const instructions = makeData();
 
-// const PaginatedDateProvider = PaginationDataProviderMixin(ArrayDataProvider);
-
-const dataProvider = new ArrayDataProvider({
-	idProperty: 'order',
-	data: instructions
+const dataProvider = new StoreDataProvider({
+	store: new StoreBase({
+		data: instructions,
+		idProperty: 'order'
+	})
 });
 
 const columns = [
@@ -36,7 +36,6 @@ const columns = [
 const properties: GridProperties & HasScrollTo = {
 	dataProvider,
 	columns,
-	// footers: [ w(GridPagination, { dataProvider, itemsPerPage: 10, paginationConstructor: Pagination }) ],
 	onScrollToComplete() {
 		delete properties.scrollTo;
 	}
@@ -52,4 +51,4 @@ class Projector extends ProjectorBase<WidgetProperties> {
 
 const projector = new Projector();
 
-projector.append(document.getElementById('arrayDataProviderExample')!);
+projector.append(document.getElementById('storeDataProviderExample')!);

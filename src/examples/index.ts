@@ -9,4 +9,4 @@
 	]
 });
 
-(<any> require)([ 'src/examples/main' ], function () {});
+(<any> require)([ 'src/examples/main', 'src/examples/store' ], function () {});
